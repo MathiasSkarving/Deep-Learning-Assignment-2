@@ -16,7 +16,7 @@ import torchmetrics
 from medmnist import BloodMNIST
 from sklearn.metrics import ConfusionMatrixDisplay
 
-from cnn import CNN;
+from cnn import CNN, CNNLeNet5;
 
 batch_size = 60
 
@@ -43,8 +43,10 @@ loss_function = nn.CrossEntropyLoss()
 # Define the optimizer
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 finetimizer = optim.Adam(model.parameters(), lr=0.0001)
-
 train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=8).to(device)
+
+learning_rates = [0.1, 0.01, 0.001, 0.0001, 0.00001]
+
 
 num_epochs=20
 for epoch in range(num_epochs):
@@ -143,5 +145,31 @@ for i in range(cm.shape[0]):
         disp.text_[i, j].set_color("white" if norm(cm[i, j]) > 0.6 else "black")
 
 ax.set_title("Confusion matrix (power scale, errors emphasized)")
+plt.tight_layout()
+plt.show()
+
+import matplotlib.pyplot as plt
+import torch
+
+# Assuming 'model' is your trained CNNLeNet5 instance
+# 1. Extract weights, clone them to avoid messing with the actual model, and convert to NumPy
+filters = model.conv1.weight.data.clone().cpu().numpy()
+
+# 2. Normalize the weights to a [0, 1] range so Matplotlib can render them properly
+# Without this, the negative weights might not render or will clip
+filters = (filters - filters.min()) / (filters.max() - filters.min())
+
+# 3. Set up a Matplotlib figure to plot all 6 filters side-by-side
+fig, axes = plt.subplots(1, 6, figsize=(15, 3))
+
+for i in range(6):
+    # Select the i-th output filter, and the 0-th input channel (since BloodMNIST is grayscale/1-channel)
+    kernel = filters[i, 0, :, :]
+    
+    ax = axes[i]
+    ax.imshow(kernel)
+    ax.axis('off')
+    ax.set_title(f'Filter {i+1}')
+
 plt.tight_layout()
 plt.show()

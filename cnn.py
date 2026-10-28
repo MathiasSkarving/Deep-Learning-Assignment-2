@@ -34,11 +34,11 @@ class CNN(nn.Module):
         self.dropout = nn.Dropout(0.3)
         
         # Fully connected layer   
-        self.fc1 = nn.Linear(7 * 7 * 128, 256)
+        self.fc1 = nn.Linear(7 * 7 * 128, 512)
         
-        self.fc2 = nn.Linear(256, 512)
+        self.fc2 = nn.Linear(512, 256)
         
-        self.fc3 = nn.Linear(512, num_classes)
+        self.fc3 = nn.Linear(256, num_classes)
 
     def forward(self, x):
         """

@@ -93,7 +93,7 @@ class CNNLeNet5(nn.Module):
         self.fc2 = nn.Linear(in_features=120, out_features=84)
         
         # Output Layer
-        self.fc3 = nn.Linear(in_features=84, out_features=10)
+        self.fc3 = nn.Linear(in_features=84, out_features=8)
 
     def forward(self, x):
         """
